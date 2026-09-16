@@ -22,7 +22,7 @@ const columns = [
   },
   {
     title: "Community",
-    links: [{ label: "X", href: "https://x.com" }],
+    links: [{ label: "X", href: "https://x.com/Arca_Market" }],
   },
 ];
 

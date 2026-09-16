@@ -53,7 +53,7 @@ export function Navbar() {
               );
             })}
             <a
-              href="https://x.com"
+              href="https://x.com/Arca_Market"
               target="_blank"
               rel="noreferrer"
               aria-label="Open X"
