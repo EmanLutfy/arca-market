@@ -1,8 +1,11 @@
 import type { Address } from "viem";
 
-export const arcaMarketAddress = process.env.NEXT_PUBLIC_ARCA_MARKET_ADDRESS as
-  | Address
-  | undefined;
+// Normalize env values so a mixed-case address with a bad checksum cannot
+// prevent viem from preparing the transaction.
+const configuredAddress = process.env.NEXT_PUBLIC_ARCA_MARKET_ADDRESS;
+export const arcaMarketAddress = configuredAddress
+  ? (configuredAddress.toLowerCase() as Address)
+  : undefined;
 
 export const arcaMarketAbi = [
   {
