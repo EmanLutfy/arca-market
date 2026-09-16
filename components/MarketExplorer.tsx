@@ -1,39 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { MarketCard } from "./MarketCard";
-import { container, sectionPad, divider, eyebrow, data } from "@/lib/ui";
+import { container, sectionPad, divider, eyebrow } from "@/lib/ui";
 import { categories, markets, type Category } from "@/lib/markets";
 
 const sorts = ["Trending", "Volume", "Ending soon", "Newest"] as const;
 type Sort = (typeof sorts)[number];
 
-type PolymarketMarket = {
-  sourceMarketId: string;
-  question: string;
-  endDate: string;
-  volume: number;
-  outcomePrices: string[];
-  url: string | null;
-};
-
 export function MarketExplorer() {
   const [category, setCategory] = useState<Category | "All">("All");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<Sort>("Trending");
-  const [polymarketMarkets, setPolymarketMarkets] = useState<PolymarketMarket[]>([]);
-
-  useEffect(() => {
-    fetch("/api/polymarket/markets")
-      .then((response) => (response.ok ? response.json() : Promise.reject()))
-      .then((payload: { markets?: PolymarketMarket[] }) =>
-        setPolymarketMarkets(payload.markets?.slice(0, 3) ?? []),
-      )
-      .catch(() => setPolymarketMarkets([]));
-  }, []);
-
   const filtered = useMemo(() => {
     let list = markets.filter((m) => category === "All" || m.category === category);
     if (query.trim()) {
@@ -112,42 +92,6 @@ export function MarketExplorer() {
             </div>
           </div>
         </Reveal>
-
-        {polymarketMarkets.length > 0 && (
-          <Reveal delay={0.08} className="mb-12 border-y border-border">
-            <div className="flex items-center justify-between border-b border-border py-4">
-              <div>
-                <p className="text-xs uppercase tracking-wide text-ink-dim">External reference</p>
-                <p className="mt-1 text-sm text-ink-muted">Live markets from Polymarket</p>
-              </div>
-              <span className="text-xs text-ink-dim">Source data only</span>
-            </div>
-            {polymarketMarkets.map((market) => {
-              const yesPrice = Math.round(Number(market.outcomePrices[0] ?? 0) * 100);
-              return (
-                <div
-                  key={market.sourceMarketId}
-                  className="flex flex-col gap-3 border-b border-border py-4 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <p className="max-w-2xl text-sm text-ink-muted">{market.question}</p>
-                  <div className="flex shrink-0 items-center gap-5 text-sm">
-                    <span className={`${data} text-yes`}>{yesPrice}¢ YES</span>
-                    {market.url && (
-                      <a
-                        href={market.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-ink-muted transition hover:text-ink"
-                      >
-                        View source ↗
-                      </a>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </Reveal>
-        )}
 
         {filtered.length === 0 ? (
           <p className="py-16 text-center text-ink-muted">

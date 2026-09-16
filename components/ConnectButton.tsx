@@ -75,7 +75,7 @@ export function ConnectButton({ className = "" }: { className?: string }) {
       </button>
       {showWallets && (
         <div
-          className="fixed inset-0 z-[100] flex min-h-screen items-start justify-center overflow-y-auto bg-bg/80 px-4 py-6 backdrop-blur-sm sm:items-center"
+          className="fixed inset-0 z-[100] flex min-h-screen items-start justify-center overflow-y-auto bg-transparent px-4 py-6 backdrop-blur-sm sm:items-center"
           role="dialog"
           aria-modal="true"
           aria-label="Connect a wallet"
